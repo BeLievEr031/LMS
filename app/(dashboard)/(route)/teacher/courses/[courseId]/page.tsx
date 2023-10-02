@@ -8,6 +8,7 @@ import IconBadge from "@/components/IconBadge"
 import TitleForm from "./_components/TitleForm"
 import DescriptionForm from "./_components/DescriptionForm"
 import ImageForm from "./_components/ImageForm"
+import CategoryForm from "./_components/CategoryForm"
 
 interface ICourseIdProp {
     params: {
@@ -22,6 +23,7 @@ const CourseIdPage = async ({ params }: ICourseIdProp) => {
         return redirect("/");
     }
 
+    // @Fetching Course
     const course = await db.course.findUnique({
         where: {
             id: params.courseId,
@@ -32,6 +34,13 @@ const CourseIdPage = async ({ params }: ICourseIdProp) => {
     if (!course) {
         return redirect("/");
     }
+
+    // @Fetching Categories
+    const categories = await db.category.findMany({
+        orderBy: {
+            name: "asc"
+        }
+    })
 
     const requiredFields = [
         course.title,
@@ -65,6 +74,7 @@ const CourseIdPage = async ({ params }: ICourseIdProp) => {
                     <TitleForm initialData={course} courseId={course.id} />
                     <DescriptionForm initialData={course} courseId={course.id} />
                     <ImageForm initialData={course} courseId={course.id} />
+                    <CategoryForm initialData={course} courseId={course.id} options={categories.map((category) => ({ value: category.id, label: category.name }))} />
                 </div>
             </div>
         </div>
