@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { Pencil, PlusCircle, ImageIcon, File } from "lucide-react";
+import { Pencil, PlusCircle, ImageIcon, File, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,7 @@ export const AttachmentForm = ({
     courseId
 }: AttachmentFormProps) => {
     const [isEditing, setIsEditing] = useState(false);
-
+    const [attachmentId, setAttachmentId] = useState<string | null>(null)
     const toggleEdit = () => setIsEditing((current) => !current);
 
     const router = useRouter();
@@ -41,6 +41,19 @@ export const AttachmentForm = ({
             router.refresh();
         } catch (error) {
             toast.error("Internal Server Error");
+        }
+    }
+
+    const handleDelete = async (id: string) => {
+        try {
+            setAttachmentId(id)
+            await axios.delete(`/api/courses/${courseId}/attachments/${id}`);
+            toast.success("Course updated");
+            router.refresh();
+        } catch (error) {
+            return toast.error("Something went wrong.")
+        } finally {
+            setAttachmentId(null)
         }
     }
 
@@ -72,12 +85,24 @@ export const AttachmentForm = ({
                         : initialData.attachments.map((attachment) => (
                             <div
                                 key={attachment.id}
-                                className="flex items-center p-3 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md"
+                                className="flex items-center justify-between p-3 w-full bg-sky-100 border-sky-200 border text-sky-700 rounded-md"
                             >
-                                <File className="h-4 w-4 mr-2 flex-shrink-0" />
-                                <p className="text-xs line-clamp-1">
-                                    {attachment.name}
-                                </p>
+                                <div className="flex">
+                                    <File className="h-4 w-4 mr-2 flex-shrink-0" />
+                                    <p className="text-xs line-clamp-1">
+                                        {attachment.name}
+                                    </p>
+                                </div>
+                                {
+                                    attachmentId === attachment.id &&
+                                    <Loader2 className="h-4 w-4" />
+                                }
+                                {
+                                    attachmentId !== attachment.id &&
+                                    <button onClick={() => handleDelete(attachment.id)}>
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                }
                             </div>
                         ))
                 }
