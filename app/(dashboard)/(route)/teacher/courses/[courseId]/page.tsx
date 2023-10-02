@@ -10,6 +10,7 @@ import DescriptionForm from "./_components/DescriptionForm"
 import ImageForm from "./_components/ImageForm"
 import CategoryForm from "./_components/CategoryForm"
 import { PriceForm } from "./_components/PriceForm"
+import AttachmentForm from "./_components/AttachmentForm"
 
 interface ICourseIdProp {
     params: {
@@ -29,6 +30,13 @@ const CourseIdPage = async ({ params }: ICourseIdProp) => {
         where: {
             id: params.courseId,
             userId: userId
+        },
+        include: {
+            attachments: {
+                orderBy: {
+                    createdAt: "desc"
+                }
+            }
         }
     })
 
@@ -100,6 +108,7 @@ const CourseIdPage = async ({ params }: ICourseIdProp) => {
                             courseId={course.id}
                         />
                     </div>
+                    <AttachmentForm initialData={course} courseId={course.id} />
                 </div>
 
             </div>
