@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+/* import "@uploadthing/react/styles.css"; */
 
 *{
   margin: 0;
@@ -88,3 +88,5 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+@import "~@uploadthing/react/styles.css"
