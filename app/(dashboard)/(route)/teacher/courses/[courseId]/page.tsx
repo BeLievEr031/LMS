@@ -3,12 +3,13 @@
 import db from "@/lib/db"
 import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
-import { LayoutDashboard } from "lucide-react"
+import { CircleDollarSign, LayoutDashboard, ListChecks } from "lucide-react"
 import IconBadge from "@/components/IconBadge"
 import TitleForm from "./_components/TitleForm"
 import DescriptionForm from "./_components/DescriptionForm"
 import ImageForm from "./_components/ImageForm"
 import CategoryForm from "./_components/CategoryForm"
+import { PriceForm } from "./_components/PriceForm"
 
 interface ICourseIdProp {
     params: {
@@ -76,6 +77,31 @@ const CourseIdPage = async ({ params }: ICourseIdProp) => {
                     <ImageForm initialData={course} courseId={course.id} />
                     <CategoryForm initialData={course} courseId={course.id} options={categories.map((category) => ({ value: category.id, label: category.name }))} />
                 </div>
+                <div className="space-y-6">
+                    <div>
+                        <div className="flex items-center gap-x-2">
+                            <IconBadge icon={ListChecks} />
+                            <h2 className="text-xl">
+                                Course chapters
+                            </h2>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <div className="flex items-center gap-x-2">
+                            <IconBadge icon={CircleDollarSign} />
+                            <h2 className="text-xl">
+                                Sell your course
+                            </h2>
+                        </div>
+                        <PriceForm
+                            initialData={course}
+                            courseId={course.id}
+                        />
+                    </div>
+                </div>
+
             </div>
         </div>
     );

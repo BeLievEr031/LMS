@@ -20,11 +20,10 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Course } from "@prisma/client";
 
 interface ITitleFormProp {
-    initialData: {
-        title: string;
-    },
+    initialData: Course,
     courseId: string;
 }
 
